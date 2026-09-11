@@ -1,0 +1,27 @@
+# RecBole dataset config for Track C.
+# Keep this in sync with whatever Track B agrees on, so the two tracks' numbers
+# are directly comparable in the final report.
+
+dataset: ml-1m
+
+# Sequential recommendation setup (next-item prediction task).
+MAX_ITEM_LIST_LENGTH: 50
+ITEM_LIST_LENGTH_FIELD: item_length
+LIST_SUFFIX: _list
+
+# Fields RecBole should load. rating is kept (not just used/unused) because it
+# becomes the label for the second task (see src/data/second_task.py).
+USER_ID_FIELD: user_id
+ITEM_ID_FIELD: item_id
+RATING_FIELD: rating
+TIME_FIELD: timestamp
+
+load_col:
+  inter: [user_id, item_id, rating, timestamp]
+
+# Leave-one-out split, standard for sequential recommendation.
+eval_args:
+  split: {'LS': 'valid_and_test'}
+  order: TO
+  group_by: user
+  mode: full

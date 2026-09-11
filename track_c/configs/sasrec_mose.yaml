@@ -1,0 +1,31 @@
+# Model + training hyperparameters for the self-attention-expert MoSE model.
+# TODO: tune once the model trains end-to-end; these are reasonable SASRec-scale defaults.
+
+# --- Self-attention expert (per-expert SASRec-style encoder) ---
+n_experts: 4
+n_layers: 2
+n_heads: 2
+hidden_size: 64
+inner_size: 256
+hidden_dropout_prob: 0.5
+attn_dropout_prob: 0.5
+hidden_act: gelu
+layer_norm_eps: 1e-12
+
+# --- MMoE gate ---
+n_tasks: 2               # task 1: next-item (recommendation), task 2: rating regression
+gate_hidden_size: 64
+
+# --- Training ---
+train_batch_size: 256
+eval_batch_size: 256
+learning_rate: 0.001
+epochs: 200
+stopping_step: 10
+loss_type: CE            # next-item loss; rating task uses MSE, combined via task weights
+
+task_loss_weights: [1.0, 1.0]  # TODO: tune the multi-task weighting
+
+eval_metric: [Recall, NDCG]
+topk: [10]
+valid_metric: NDCG@10
