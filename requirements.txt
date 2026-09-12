@@ -7,6 +7,12 @@
 #   pip install torch --index-url https://download.pytorch.org/whl/cu121
 # Do NOT just `pip install -r requirements.txt` for torch — the CPU/GPU build
 # has to match the machine it's running on, local vs. server will differ.
+#
+# Known-good on the 3x RTX 2080 Ti box (driver 565.57.01): the default
+# `pip install torch` pulled a cu130 build that fails with
+# "CUDA initialization: The NVIDIA driver on your system is too old" — that
+# driver only supports up to CUDA 12.7. Fixed with:
+#   pip install "torch==2.5.1" --index-url https://download.pytorch.org/whl/cu121
 torch>=2.1.0
 
 # --- Core ---

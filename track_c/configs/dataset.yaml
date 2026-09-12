@@ -10,7 +10,10 @@ ITEM_LIST_LENGTH_FIELD: item_length
 LIST_SUFFIX: _list
 
 # Fields RecBole should load. rating is kept (not just used/unused) because it
-# becomes the label for the second task (see src/data/second_task.py).
+# becomes the label for the second task. After RecBole's sequential
+# data_augmentation step, the *target* ("next") interaction's rating field
+# survives unchanged on every augmented training/eval sample - so no manual
+# lookup/join is needed. See src/data/second_task.py.
 USER_ID_FIELD: user_id
 ITEM_ID_FIELD: item_id
 RATING_FIELD: rating
@@ -19,9 +22,17 @@ TIME_FIELD: timestamp
 load_col:
   inter: [user_id, item_id, rating, timestamp]
 
-# Leave-one-out split, standard for sequential recommendation.
+# Leave-one-out split, standard for sequential recommendation (matches
+# RecBole's own sequential quick-start config).
 eval_args:
   split: {'LS': 'valid_and_test'}
   order: TO
   group_by: user
   mode: full
+
+# loss_type: CE (full softmax over the item vocabulary, see sasrec_mose.yaml)
+# needs no negative sampling. RecBole's global default
+# (train_neg_sample_args: {distribution: uniform, sample_num: 1}) would
+# otherwise silently inject extra negative-sampled rows into every training
+# batch, which the CE loss path here does not expect.
+train_neg_sample_args: ~

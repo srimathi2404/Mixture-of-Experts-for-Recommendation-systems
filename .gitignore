@@ -8,9 +8,12 @@ __pycache__/
 
 # Data & outputs (too large / regenerable — don't commit)
 data/
+dataset/
 checkpoints/
 results/
 *.log
+
+
 
 # RecBole's own cache/log dirs
 saved/
